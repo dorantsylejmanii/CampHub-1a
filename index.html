@@ -4,8 +4,335 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CampHub</title>
+    <meta name="theme-color" content="#f4f2e9">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            color-scheme: light;
+            --ink: #202820;
+            --muted: #71786e;
+            --paper: #f4f2e9;
+            --surface: #fffefa;
+            --line: #e6e5da;
+            --pine: #244b3d;
+            --pine-dark: #19392e;
+            --moss: #dce7cf;
+            --clay: #c36d4e;
+            --sun: #edc977;
+            --shadow: 0 18px 46px rgba(29, 45, 34, .10);
+        }
+        * { box-sizing: border-box; }
+        body { margin: 0; color: var(--ink); background: var(--paper); font-family: 'DM Sans', sans-serif; }
+        button, input, select { font: inherit; }
+        button { color: inherit; }
+        .shell { width: min(1240px, calc(100% - 56px)); margin: 0 auto; }
+        .topbar { height: 78px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(32,40,32,.1); }
+        .brand { display: flex; gap: 10px; align-items: center; color: var(--pine-dark); text-decoration: none; font: 800 21px 'Manrope', sans-serif; letter-spacing: 0; }
+        .brand-mark { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 10px; color: white; background: var(--pine); }
+        .brand-mark svg { width: 20px; height: 20px; }
+        .nav { display: flex; align-items: center; gap: 28px; }
+        .nav a { color: #60695f; text-decoration: none; font-size: 14px; font-weight: 600; }
+        .nav a.active { color: var(--pine); }
+        .saved-nav { display: inline-flex; align-items: center; gap: 8px; }
+        .saved-count { min-width: 21px; height: 21px; padding: 0 6px; border-radius: 20px; background: #e8eee2; color: var(--pine); display: inline-grid; place-items: center; font-size: 11px; }
+        .profile { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: #e9c99b; color: #513c2b; font-weight: 700; font-size: 12px; }
+        .hero { min-height: 336px; margin-top: 28px; padding: 45px 50px; border-radius: 12px; color: white; position: relative; overflow: hidden; display: flex; align-items: center; background: #314e3e url('https://images.unsplash.com/photo-1478131143081-80f7f84ca84d?auto=format&fit=crop&w=2000&q=85') center 52%/cover; }
+        .hero::before { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(16,38,31,.82) 0%, rgba(16,38,31,.53) 48%, rgba(16,38,31,.06) 100%); }
+        .hero-content { position: relative; z-index: 1; max-width: 620px; }
+        .eyebrow { margin: 0 0 12px; text-transform: uppercase; letter-spacing: 1.4px; font-weight: 700; font-size: 11px; color: #e7d7ad; }
+        h1, h2, h3, p { margin-top: 0; }
+        h1 { margin-bottom: 12px; font: 800 43px/1.1 'Manrope', sans-serif; letter-spacing: 0; }
+        .hero-copy { max-width: 455px; margin-bottom: 24px; color: rgba(255,255,255,.86); font-size: 15px; line-height: 1.6; }
+        .searchbar { display: flex; width: min(570px, 100%); min-height: 54px; padding: 6px; background: white; border-radius: 7px; box-shadow: 0 8px 28px rgba(0,0,0,.15); }
+        .search-field { display: flex; align-items: center; gap: 10px; padding: 0 13px; flex: 1; min-width: 0; color: #798176; }
+        .search-field svg { width: 19px; flex: 0 0 auto; }
+        .search-field input { width: 100%; border: 0; outline: 0; color: var(--ink); font-size: 14px; }
+        .search-field input::placeholder { color: #92988f; }
+        .searchbar button { border: 0; border-radius: 5px; padding: 0 20px; color: white; background: var(--clay); font-size: 13px; font-weight: 700; cursor: pointer; }
+        .searchbar button:hover { background: #ad593c; }
+        .main { padding: 36px 0 72px; }
+        .section-head { display: flex; justify-content: space-between; align-items: end; gap: 20px; margin-bottom: 20px; }
+        .section-head h2 { margin: 0 0 5px; font: 800 24px 'Manrope', sans-serif; letter-spacing: 0; }
+        .section-head p { margin: 0; color: var(--muted); font-size: 13px; }
+        .view-tabs { display: flex; gap: 5px; background: #e9e8df; padding: 4px; border-radius: 7px; }
+        .view-tabs button { border: 0; padding: 9px 14px; border-radius: 5px; background: transparent; color: #687064; font-size: 12px; font-weight: 700; cursor: pointer; }
+        .view-tabs button[aria-selected="true"] { color: var(--pine); background: var(--surface); box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+        .toolbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--line); }
+        .filters { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+        .filter-select { height: 36px; padding: 0 30px 0 11px; border: 1px solid #dcded3; border-radius: 5px; background: var(--surface); color: #465146; font-size: 12px; outline-color: var(--pine); }
+        .amenity-toggle { height: 34px; border: 1px solid #dcded3; border-radius: 5px; padding: 0 10px; background: transparent; color: #5e685e; font-size: 11px; font-weight: 600; cursor: pointer; }
+        .amenity-toggle[aria-pressed="true"] { border-color: var(--pine); background: #e4ecdd; color: var(--pine-dark); }
+        .results-count { white-space: nowrap; color: var(--muted); font-size: 12px; }
+        .camp-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+        .camp-card { min-width: 0; overflow: hidden; background: var(--surface); border: 1px solid rgba(31,47,34,.07); border-radius: 8px; transition: transform .2s ease, box-shadow .2s ease; }
+        .camp-card:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
+        .camp-photo { height: 190px; position: relative; background: #768273 center/cover; cursor: pointer; }
+        .camp-photo::after { content: ''; position: absolute; inset: 48% 0 0; background: linear-gradient(transparent, rgba(0,0,0,.28)); pointer-events: none; }
+        .tag { position: absolute; z-index: 1; left: 12px; top: 12px; padding: 6px 8px; border-radius: 3px; color: #263b2d; background: #f5f1df; font-size: 10px; font-weight: 700; }
+        .favorite { position: absolute; z-index: 2; top: 10px; right: 10px; width: 34px; height: 34px; display: grid; place-items: center; border: 0; border-radius: 50%; background: rgba(255,255,255,.93); color: #36433a; cursor: pointer; }
+        .favorite svg { width: 17px; height: 17px; }
+        .favorite.is-saved { color: var(--clay); }
+        .favorite.is-saved svg { fill: currentColor; }
+        .photo-caption { z-index: 1; position: absolute; left: 14px; right: 14px; bottom: 12px; color: white; font-size: 11px; font-weight: 600; text-shadow: 0 1px 4px #000; }
+        .camp-info { padding: 15px 16px 14px; }
+        .camp-title-row { display: flex; justify-content: space-between; gap: 10px; align-items: start; }
+        .camp-title { margin: 0; font: 700 16px 'Manrope', sans-serif; letter-spacing: 0; cursor: pointer; }
+        .rating { color: #465447; white-space: nowrap; font-size: 11px; font-weight: 700; }
+        .rating span { color: #d28c34; }
+        .camp-place { margin: 5px 0 13px; color: #798176; font-size: 12px; }
+        .camp-meta { display: flex; justify-content: space-between; gap: 8px; align-items: center; border-top: 1px solid #efeee7; padding-top: 12px; }
+        .meta-list { display: flex; gap: 11px; flex-wrap: wrap; color: #677267; font-size: 10px; }
+        .price { color: var(--pine); font-size: 12px; font-weight: 700; white-space: nowrap; }
+        .price small { color: #81877e; font-size: 10px; font-weight: 500; }
+        .empty-state { grid-column: 1/-1; padding: 58px 20px; text-align: center; background: rgba(255,254,250,.65); border: 1px dashed #cdd3c5; border-radius: 8px; }
+        .empty-state h3 { margin-bottom: 6px; font: 700 18px 'Manrope', sans-serif; }
+        .empty-state p { margin-bottom: 0; color: var(--muted); font-size: 13px; }
+        .feature-strip { display: grid; grid-template-columns: 1.2fr 1fr 1fr; align-items: center; gap: 20px; margin-top: 38px; padding: 23px 26px; border-radius: 8px; background: #e6eadc; }
+        .feature-strip h3 { margin: 0 0 4px; font: 700 15px 'Manrope', sans-serif; }
+        .feature-strip p { margin: 0; color: #697367; font-size: 11px; line-height: 1.5; }
+        .feature-point { display: flex; align-items: center; gap: 11px; color: var(--pine); }
+        .feature-point svg { flex: 0 0 auto; width: 22px; height: 22px; }
+        .feature-point strong { display: block; color: #334437; font-size: 12px; }
+        .feature-point span { display: block; margin-top: 3px; color: #71796f; font-size: 10px; }
+        dialog { width: min(640px, calc(100% - 28px)); max-height: min(88vh, 780px); padding: 0; border: 0; border-radius: 10px; color: var(--ink); background: var(--surface); box-shadow: 0 24px 80px rgba(0,0,0,.32); }
+        dialog::backdrop { background: rgba(15,27,21,.62); backdrop-filter: blur(3px); }
+        .dialog-photo { height: 240px; position: relative; background: #687768 center/cover; }
+        .dialog-close { position: absolute; top: 12px; right: 12px; width: 35px; height: 35px; border: 0; border-radius: 50%; background: white; cursor: pointer; font-size: 19px; }
+        .dialog-body { padding: 22px 24px 24px; }
+        .dialog-body h2 { margin: 0 0 4px; font: 800 23px 'Manrope', sans-serif; }
+        .dialog-location { margin: 0 0 16px; color: var(--muted); font-size: 13px; }
+        .dialog-description { color: #596257; font-size: 13px; line-height: 1.65; }
+        .detail-pills { display: flex; flex-wrap: wrap; gap: 7px; margin: 16px 0 22px; }
+        .detail-pills span { padding: 7px 9px; border-radius: 4px; background: #edf0e7; color: #485849; font-size: 11px; }
+        .dialog-footer { display: flex; justify-content: space-between; align-items: center; gap: 14px; border-top: 1px solid var(--line); padding-top: 17px; }
+        .dialog-price { color: var(--pine); font-weight: 700; font-size: 16px; }
+        .dialog-price small { color: var(--muted); font-size: 11px; font-weight: 400; }
+        .dialog-action { border: 0; border-radius: 5px; padding: 12px 16px; color: white; background: var(--pine); font-size: 12px; font-weight: 700; cursor: pointer; }
+        .dialog-action:hover { background: var(--pine-dark); }
+        .toast { position: fixed; left: 50%; bottom: 22px; z-index: 5; padding: 11px 16px; border-radius: 5px; transform: translate(-50%, 14px); opacity: 0; pointer-events: none; color: white; background: #273d31; box-shadow: var(--shadow); font-size: 12px; transition: .2s ease; }
+        .toast.show { opacity: 1; transform: translate(-50%, 0); }
+        @media (max-width: 850px) {
+            .shell { width: min(100% - 36px, 720px); }
+            .camp-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .hero { min-height: 340px; padding: 36px; }
+            .feature-strip { grid-template-columns: 1fr 1fr; }
+            .feature-strip > div:first-child { grid-column: 1/-1; }
+        }
+        @media (max-width: 580px) {
+            .shell { width: calc(100% - 28px); }
+            .topbar { height: 65px; }
+            .nav { gap: 15px; }
+            .nav a:not(.saved-nav) { display: none; }
+            .brand { font-size: 19px; }
+            .hero { min-height: 382px; margin-top: 15px; padding: 27px 21px; background-position: 58% center; }
+            .hero::before { background: linear-gradient(90deg, rgba(16,38,31,.82), rgba(16,38,31,.48)); }
+            h1 { max-width: 330px; font-size: 35px; }
+            .hero-copy { font-size: 13px; }
+            .searchbar { min-height: 50px; }
+            .searchbar button { padding: 0 13px; }
+            .main { padding-top: 29px; }
+            .section-head { align-items: start; flex-direction: column; }
+            .toolbar { align-items: start; flex-direction: column; }
+            .filters { gap: 7px; }
+            .camp-grid { grid-template-columns: 1fr; gap: 13px; }
+            .camp-photo { height: 205px; }
+            .feature-strip { grid-template-columns: 1fr; padding: 20px; gap: 17px; }
+            .feature-strip > div:first-child { grid-column: auto; }
+            .dialog-photo { height: 190px; }
+            .dialog-body { padding: 18px; }
+        }
+        @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; } }
+    </style>
 </head>
 <body>
+    <header class="shell topbar">
+        <a class="brand" href="#top" aria-label="CampHub home">
+            <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20 12 4l9 16H3Z"/><path d="m8.5 20 3.5-6 3.5 6M12 4v4"/></svg></span>
+            CampHub
+        </a>
+        <nav class="nav" aria-label="Main navigation">
+            <a class="active" href="#explore">Explore</a>
+            <a class="saved-nav" href="#explore" id="savedNav">Saved <span class="saved-count" id="savedCount">0</span></a>
+            <span class="profile" aria-label="Your profile">JD</span>
+        </nav>
+    </header>
 
+    <section class="shell hero" id="top" aria-labelledby="hero-title">
+        <div class="hero-content">
+            <p class="eyebrow">Find your outside</p>
+            <h1 id="hero-title">Your next great escape starts here.</h1>
+            <p class="hero-copy">Find a place to pitch a tent, park the van, and wake up somewhere wonderful.</p>
+            <form class="searchbar" id="searchForm" role="search">
+                <label class="search-field" for="searchInput">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg>
+                    <input id="searchInput" type="search" placeholder="Search places, parks, or campgrounds" autocomplete="off">
+                </label>
+                <button type="submit">Find a camp</button>
+            </form>
+        </div>
+    </section>
+
+    <main class="shell main" id="explore">
+        <div class="section-head">
+            <div><h2 id="listingTitle">Find your kind of wild</h2><p>Handpicked places for the long way round.</p></div>
+            <div class="view-tabs" role="tablist" aria-label="Campground list">
+                <button type="button" role="tab" aria-selected="true" data-view="all">All camps</button>
+                <button type="button" role="tab" aria-selected="false" data-view="saved">Saved</button>
+            </div>
+        </div>
+        <div class="toolbar">
+            <div class="filters" aria-label="Filter campgrounds">
+                <select class="filter-select" id="regionFilter" aria-label="Filter by region">
+                    <option value="all">All regions</option><option value="West">West</option><option value="Southwest">Southwest</option><option value="Northeast">Northeast</option><option value="Southeast">Southeast</option><option value="Northwest">Northwest</option>
+                </select>
+                <button type="button" class="amenity-toggle" data-amenity="water" aria-pressed="false">Waterfront</button>
+                <button type="button" class="amenity-toggle" data-amenity="pets" aria-pressed="false">Pet friendly</button>
+                <button type="button" class="amenity-toggle" data-amenity="showers" aria-pressed="false">Showers</button>
+            </div>
+            <span class="results-count" id="resultsCount" aria-live="polite"></span>
+        </div>
+        <div class="camp-grid" id="campGrid" aria-live="polite"></div>
+        <section class="feature-strip" aria-label="CampHub highlights">
+            <div><h3>Good camps. Better mornings.</h3><p>Thoughtful places to unplug, breathe deep, and stay a little longer.</p></div>
+            <div class="feature-point"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M12 21s7-4.4 7-11a7 7 0 1 0-14 0c0 6.6 7 11 7 11Z"/><circle cx="12" cy="10" r="2.3"/></svg><div><strong>Places worth the drive</strong><span>Picked for the setting, not the hype.</span></div></div>
+            <div class="feature-point"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6l1.2 1.2L12 21l7.6-7.6 1.2-1.2a5.4 5.4 0 0 0 0-7.6Z"/></svg><div><strong>Keep your shortlist close</strong><span>Save spots for your next open weekend.</span></div></div>
+        </section>
+    </main>
+
+    <dialog id="campDialog" aria-labelledby="dialogTitle">
+        <div class="dialog-photo" id="dialogPhoto"><button class="dialog-close" type="button" aria-label="Close details">×</button></div>
+        <div class="dialog-body" id="dialogBody"></div>
+    </dialog>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script>
+        const camps = [
+            { id: 'pine-crest', name: 'Pinecrest Campground', place: 'Sierra National Forest, California', region: 'West', rating: '4.9', reviews: 128, price: 32, type: 'Forest', tags: ['water', 'pets', 'showers'], amenities: ['Lake access', 'Pet friendly', 'Hot showers'], image: 'https://images.unsplash.com/photo-1478131143081-80f7f84ca84d?auto=format&fit=crop&w=1000&q=80', caption: 'Pine shade · lake mornings', description: 'A laid-back basecamp tucked among tall pines, with cool lake water just a short walk from your site. Best for slow mornings, easy swims, and evenings around the fire.' },
+            { id: 'juniper-ridge', name: 'Juniper Ridge Camp', place: 'Moab, Utah', region: 'Southwest', rating: '4.8', reviews: 96, price: 28, type: 'Desert', tags: ['pets'], amenities: ['Dark skies', 'Pet friendly', 'RV friendly'], image: 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=1000&q=80', caption: 'Red rock · wide open skies', description: 'Settle into a quiet desert pocket close to the trailheads and sandstone country. Juniper Ridge is all big skies, warm evenings, and stargazing without the crowds.' },
+            { id: 'cedar-hollow', name: 'Cedar Hollow Camp', place: 'Green Mountain National Forest, Vermont', region: 'Northeast', rating: '4.7', reviews: 84, price: 36, type: 'Woodland', tags: ['water', 'pets', 'showers'], amenities: ['Creekside sites', 'Pet friendly', 'Hot showers'], image: 'https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1000&q=80', caption: 'Mossy trails · creekside sites', description: 'A small woodland hideaway where a clear creek winds between the campsites. Wander the forest paths by day, then fall asleep to the sound of moving water.' },
+            { id: 'blue-heron', name: 'Blue Heron Landing', place: 'Chattahoochee National Forest, Georgia', region: 'Southeast', rating: '4.9', reviews: 213, price: 30, type: 'Riverside', tags: ['water', 'pets', 'showers'], amenities: ['River access', 'Pet friendly', 'Hot showers'], image: 'https://images.unsplash.com/photo-1504851149312-7a075b496cc7?auto=format&fit=crop&w=1000&q=80', caption: 'River bends · old-growth shade', description: 'Camp beside a gentle bend in the river, surrounded by hardwood forest. There is room to paddle, plenty of shade, and an easy trail leading right from camp.' },
+            { id: 'alpine-meadow', name: 'Alpine Meadow Basecamp', place: 'Mount Hood National Forest, Oregon', region: 'Northwest', rating: '4.8', reviews: 151, price: 41, type: 'Mountain', tags: ['water', 'pets'], amenities: ['Mountain views', 'Pet friendly', 'Trail access'], image: 'https://images.unsplash.com/photo-1475483768296-6163e08872a1?auto=format&fit=crop&w=1000&q=80', caption: 'Mountain air · wildflower meadows', description: 'A high-country meadow framed by evergreens and big mountain views. Start your hike from camp, or simply spend the afternoon watching clouds drift past the peaks.' },
+            { id: 'saltwind', name: 'Saltwind Dunes', place: 'Cape Lookout, North Carolina', region: 'Southeast', rating: '4.6', reviews: 72, price: 38, type: 'Coastal', tags: ['water', 'pets'], amenities: ['Beach access', 'Pet friendly', 'Sunset views'], image: 'https://images.unsplash.com/photo-1473116763249-2faaef81ccda?auto=format&fit=crop&w=1000&q=80', caption: 'Sea grass · salt air · no rush', description: 'A breezy coastal campground a few sandy steps from the shore. Bring a book, watch the tide roll in, and let the ocean set the pace for a while.' }
+        ];
+
+        const grid = document.getElementById('campGrid');
+        const searchInput = document.getElementById('searchInput');
+        const regionFilter = document.getElementById('regionFilter');
+        const resultsCount = document.getElementById('resultsCount');
+        const savedCount = document.getElementById('savedCount');
+        const listingTitle = document.getElementById('listingTitle');
+        const dialog = document.getElementById('campDialog');
+        const dialogPhoto = document.getElementById('dialogPhoto');
+        const dialogBody = document.getElementById('dialogBody');
+        const toast = document.getElementById('toast');
+        let activeView = 'all';
+        let activeAmenities = new Set();
+        let saved = new Set();
+        try { saved = new Set(JSON.parse(localStorage.getItem('camphub-saved') || '[]')); } catch { saved = new Set(); }
+
+        const icon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6l1.2 1.2L12 21l7.6-7.6 1.2-1.2a5.4 5.4 0 0 0 0-7.6Z"/></svg>';
+        function persistSaved() {
+            try { localStorage.setItem('camphub-saved', JSON.stringify([...saved])); } catch { /* Storage can be unavailable in private browsing. */ }
+            savedCount.textContent = saved.size;
+        }
+        function filteredCamps() {
+            const query = searchInput.value.trim().toLowerCase();
+            return camps.filter(camp => {
+                const text = `${camp.name} ${camp.place} ${camp.region} ${camp.type} ${camp.amenities.join(' ')}`.toLowerCase();
+                return (activeView !== 'saved' || saved.has(camp.id)) &&
+                    (regionFilter.value === 'all' || camp.region === regionFilter.value) &&
+                    [...activeAmenities].every(amenity => camp.tags.includes(amenity)) &&
+                    (!query || text.includes(query));
+            });
+        }
+        function render() {
+            const visible = filteredCamps();
+            resultsCount.textContent = `${visible.length} ${visible.length === 1 ? 'place' : 'places'}`;
+            listingTitle.textContent = activeView === 'saved' ? 'Your saved camps' : 'Find your kind of wild';
+            grid.innerHTML = visible.length ? visible.map(camp => `
+                <article class="camp-card">
+                    <div class="camp-photo" role="button" tabindex="0" data-details="${camp.id}" aria-label="View ${camp.name} details" style="background-image:url('${camp.image}')">
+                        <span class="tag">${camp.type} camp</span>
+                        <button class="favorite ${saved.has(camp.id) ? 'is-saved' : ''}" type="button" data-save="${camp.id}" aria-label="${saved.has(camp.id) ? 'Remove' : 'Save'} ${camp.name}" aria-pressed="${saved.has(camp.id)}">${icon}</button>
+                        <span class="photo-caption">${camp.caption}</span>
+                    </div>
+                    <div class="camp-info">
+                        <div class="camp-title-row"><h3 class="camp-title" role="button" tabindex="0" data-details="${camp.id}">${camp.name}</h3><span class="rating"><span aria-hidden="true">★</span> ${camp.rating} <span style="color:#81877e;font-weight:500">(${camp.reviews})</span></span></div>
+                        <p class="camp-place">${camp.place}</p>
+                        <div class="camp-meta"><div class="meta-list">${camp.amenities.slice(0, 2).map(item => `<span>${item}</span>`).join('')}</div><div class="price">$${camp.price} <small>/ night</small></div></div>
+                    </div>
+                </article>`).join('') : `<div class="empty-state"><h3>${activeView === 'saved' ? 'Your shortlist is waiting' : 'No camps found'}</h3><p>${activeView === 'saved' ? 'Tap the heart on a campground to keep it here.' : 'Try another search or loosen up your filters.'}</p></div>`;
+        }
+        function showToast(message) {
+            toast.textContent = message;
+            toast.classList.add('show');
+            clearTimeout(showToast.timer);
+            showToast.timer = setTimeout(() => toast.classList.remove('show'), 2200);
+        }
+        function toggleSaved(id) {
+            const camp = camps.find(item => item.id === id);
+            if (!camp) return;
+            if (saved.has(id)) { saved.delete(id); showToast(`${camp.name} removed from saved`); }
+            else { saved.add(id); showToast(`${camp.name} saved for later`); }
+            persistSaved();
+            render();
+        }
+        function openDetails(id) {
+            const camp = camps.find(item => item.id === id);
+            if (!camp) return;
+            dialogPhoto.style.backgroundImage = `url('${camp.image}')`;
+            dialogBody.innerHTML = `<h2 id="dialogTitle">${camp.name}</h2><p class="dialog-location">${camp.place} · ${camp.rating} ★ (${camp.reviews} reviews)</p><p class="dialog-description">${camp.description}</p><div class="detail-pills">${camp.amenities.map(item => `<span>${item}</span>`).join('')}<span>${camp.type}</span></div><div class="dialog-footer"><div class="dialog-price">$${camp.price} <small>/ night</small></div><button class="dialog-action" type="button" data-plan="${camp.id}">Add to my shortlist</button></div>`;
+            dialog.showModal();
+        }
+        document.getElementById('searchForm').addEventListener('submit', event => { event.preventDefault(); render(); document.getElementById('explore').scrollIntoView({ behavior: 'smooth' }); });
+        searchInput.addEventListener('input', render);
+        regionFilter.addEventListener('change', render);
+        document.querySelectorAll('.amenity-toggle').forEach(button => button.addEventListener('click', () => {
+            const amenity = button.dataset.amenity;
+            if (activeAmenities.has(amenity)) activeAmenities.delete(amenity); else activeAmenities.add(amenity);
+            button.setAttribute('aria-pressed', activeAmenities.has(amenity));
+            render();
+        }));
+        document.querySelectorAll('[data-view]').forEach(button => button.addEventListener('click', () => {
+            activeView = button.dataset.view;
+            document.querySelectorAll('[data-view]').forEach(tab => tab.setAttribute('aria-selected', tab === button));
+            render();
+        }));
+        document.getElementById('savedNav').addEventListener('click', event => {
+            event.preventDefault();
+            activeView = 'saved';
+            document.querySelectorAll('[data-view]').forEach(tab => tab.setAttribute('aria-selected', tab.dataset.view === 'saved'));
+            render();
+            document.getElementById('explore').scrollIntoView({ behavior: 'smooth' });
+        });
+        grid.addEventListener('click', event => {
+            const saveButton = event.target.closest('[data-save]');
+            if (saveButton) { event.stopPropagation(); toggleSaved(saveButton.dataset.save); return; }
+            const detailTarget = event.target.closest('[data-details]');
+            if (detailTarget) openDetails(detailTarget.dataset.details);
+        });
+        grid.addEventListener('keydown', event => {
+            if ((event.key === 'Enter' || event.key === ' ') && event.target.matches('[data-details]')) { event.preventDefault(); openDetails(event.target.dataset.details); }
+        });
+        dialog.addEventListener('click', event => {
+            if (event.target.closest('.dialog-close')) dialog.close();
+            const planButton = event.target.closest('[data-plan]');
+            if (planButton) { const camp = camps.find(item => item.id === planButton.dataset.plan); toggleSaved(planButton.dataset.plan); dialog.close(); showToast(`${camp.name} added to your shortlist`); }
+        });
+        persistSaved();
+        render();
+    </script>
+    <h2>Explore Camps
+    </h2>
+    <p>Find more</p>
+    <ul>
+        <li>Item 1</li>
+        <li>Item 2</li>
+        <li>Item 3</li> 
+    </ul>>
+    <img src ="doranti.jpg" alt="Backgrround pic"> 
+    <a href="https://www.pinterest.com/search/pins/?q=wallpaper%20for%20laptop&rs=typed">Pinterest Wallpaper Search</a>
 </body>
 </html>
