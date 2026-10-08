@@ -309,7 +309,7 @@
         });
         grid.addEventListener('click', event => {
             const saveButton = event.target.closest('[data-save]');
-            if (saveButton) { event.stopPropagation(); toggleSaved(saveButton.dataset.save); return; }
+            if (saveButton) {    event.stopPropagation(); toggleSaved(saveButton.dataset.save); return; }
             const detailTarget = event.target.closest('[data-details]');
             if (detailTarget) openDetails(detailTarget.dataset.details);
         });
@@ -332,7 +332,9 @@
         <li>Item 2</li>
         <li>Item 3</li> 
     </ul>>
-    <img src ="monkey.jpg" alt="Backgrround pic"> 
     <a href="https://www.pinterest.com/search/pins/?q=wallpaper%20for%20laptop&rs=typed">Pinterest Wallpaper Search</a>
+    <a href =  "links.html">
+        <img src="monkey.jpg" width = "65" height = "65" alt="monkey">
+    </a>
 </body>
 </html>
